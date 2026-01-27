@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dfy6dg2hsa7lh"]
+[gd_scene load_steps=11 format=3 uid="uid://dfy6dg2hsa7lh"]
 
 [ext_resource type="Script" uid="uid://cgb7e8sop5ea6" path="res://scenes/btn.gd" id="1_ekxnf"]
 [ext_resource type="Script" uid="uid://bf75g2axh6qkj" path="res://scripts/click_me.gd" id="1_l6cm7"]
@@ -18,7 +18,9 @@ shader_parameter/black_offset_multiplier = 0.1
 shader_parameter/color_offset = 0.005
 
 [sub_resource type="QuadMesh" id="QuadMesh_rtw2f"]
+lightmap_size_hint = Vector2i(12, 12)
 material = SubResource("ShaderMaterial_8ln24")
+size = Vector2(2, 2)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_bqqt6"]
 viewport_path = NodePath("SubViewport")
@@ -29,13 +31,22 @@ viewport_path = NodePath("SubViewport/Node3D/Sprite3D/SubViewport")
 [sub_resource type="BoxShape3D" id="BoxShape3D_rhts7"]
 size = Vector3(27.501953, 5.578003, 1)
 
+[sub_resource type="Environment" id="Environment_wu84c"]
+background_mode = 1
+background_color = Color(0.5060806, 0.5780025, 0.42337045, 1)
+
 [node name="Main Menu" type="Node3D"]
 
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22840023, 1.8166105, 0.91969156)
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(-3.0500493, 0, 0.021012172, 0, -2.454909, 0, -0.06410247, 0, -0.9997791, 0, 1.595166, 0)
+transform = Transform3D(-2.4190214, 0, 0.27805606, 0, -2.4549093, 0, -0.7284571, 0, -0.9233538, 0, 1.595166, 0)
+extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_rtw2f")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(578.49994, 323.75003)
 scale = Vector2(0.615, 0.615)
 texture = SubResource("ViewportTexture_bqqt6")
@@ -46,30 +57,18 @@ size = Vector2i(1920, 1080)
 
 [node name="World" type="Node" parent="SubViewport"]
 
-[node name="Camera3D" type="Camera3D" parent="SubViewport/World"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17306328, 0.63381016, 0.4836681)
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport/World"]
 transform = Transform3D(0.94181716, -7.0170847e-09, 0.3361256, -0.096701615, 0.9577221, 0.270956, -0.32191494, -0.28769487, 0.9019992, 0, 1.064014, 2.3193393)
 
-[node name="Temp Map" type="Node" parent="SubViewport"]
-
-[node name="CSGBox3D" type="CSGBox3D" parent="SubViewport/Temp Map"]
-transform = Transform3D(0.84688866, 0, 0, 0, 0.84688866, 0, 0, 0, 0.84688866, -0.3208499, -0.44580078, -1.2132747)
-size = Vector3(2.8566952, 0.10839844, 0.80648804)
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="SubViewport/Temp Map"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33730233, -0.08514404, -1.2120438)
-size = Vector3(2.112664, 0.8297119, 0.30281067)
-
-[node name="CSGBox3D3" type="CSGBox3D" parent="SubViewport/Temp Map"]
-transform = Transform3D(0.5473431, 0, 0, 0, 0.5473431, 0, 0, 0, 0.22378968, -0.31211028, 0.31047153, -1.2453613)
-size = Vector3(4.2668686, 0.10839844, 3.4907227)
+[node name="plane_menu" parent="SubViewport" instance=ExtResource("3_bqqt6")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.074683405, 1.8564267, -1.8651652)
 
 [node name="Node3D" type="Node3D" parent="SubViewport"]
+transform = Transform3D(0.99016577, -0.13989896, 0, 0.13989896, 0.99016577, 0, 0, 0, 1, 0, 2.142832, -0.032236576)
 
 [node name="Sprite3D" type="Sprite3D" parent="SubViewport/Node3D"]
-transform = Transform3D(0.253666, 0, 0, 0, 0.253666, 0, 0, 0, 0.253666, -0.3144802, -0.0938077, -1.0078524)
+transform = Transform3D(0.253666, 0, 0, 0, 0.253666, 0, 0, 0, 0.253666, -0.3144801, -0.0938077, -0.20874214)
+gi_lightmap_texel_scale = 10.0
 texture = SubResource("ViewportTexture_rhts7")
 
 [node name="SubViewport" type="SubViewport" parent="SubViewport/Node3D/Sprite3D"]
@@ -80,6 +79,7 @@ size = Vector2i(700, 150)
 [node name="Button" type="Button" parent="SubViewport/Node3D/Sprite3D/SubViewport"]
 offset_right = 700.0
 offset_bottom = 150.0
+theme_override_colors/font_color = Color(0.038547292, 0.8000307, 0.27370995, 1)
 theme_override_font_sizes/font_size = 40
 text = "click me"
 script = ExtResource("1_ekxnf")
@@ -92,7 +92,7 @@ script = ExtResource("1_l6cm7")
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -0.015503134, -0.018546581, 0)
 shape = SubResource("BoxShape3D_rhts7")
 
-[node name="plane_menu" parent="SubViewport/Node3D" instance=ExtResource("3_bqqt6")]
-transform = Transform3D(-0.9998406, 0, 0.017853655, 0, 1, 0, -0.017853655, 0, -0.9998406, 0.074683405, 1.8564267, -2.3974714)
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_wu84c")
 
 [connection signal="pressed" from="SubViewport/Node3D/Sprite3D/SubViewport/Button" to="SubViewport/Node3D/Sprite3D/SubViewport/Button" method="_on_pressed"]
