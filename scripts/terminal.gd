@@ -18,52 +18,44 @@ extends Control
 ]
 
 @onready var feedback_label = $FeedbackLabel
-@onready var safe_area = $Safe  # Reference to the `Safe` Area3D node
-@onready var anomaly_area = $Anomaly  # Reference to the `Anomaly` Area3D node
+@onready var safe_area = $Safe
+@onready var anomaly_area = $Anomaly
 
 @export var normal_sprites: Array[Texture2D] = [load("res://images/Untitled_Artwork (1).png")]
 @export var anomaly_sprites: Array[Texture2D] = [load("res://images/Untitled_Artwork (2).png")]
 @export var anomaly_probability = 0.05
 @export var feedback_timeout = 1.5
 
-var is_anomaly_map: Dictionary = {}  # Tracks which Sprite3D nodes have anomalies
-var level = 1  # Current level
+var is_anomaly_map: Dictionary = {}
+var level = 1
 
 func _ready():
 	if safe_area:
 		safe_area.connect("body_entered", Callable(self, "_on_safe_entered"))
 		safe_area.connect("body_exited", Callable(self, "_on_safe_exited"))
-	else:
-		print("Error: Safe Area3D is not connected to the scene.")
 
 	if anomaly_area:
 		anomaly_area.connect("body_entered", Callable(self, "_on_anomaly_entered"))
 		anomaly_area.connect("body_exited", Callable(self, "_on_anomaly_exited"))
-	else:
-		print("Error: Anomaly Area3D is not connected to the scene.")
 
-	randomize_sprites()  # Initialize random sprites
+	randomize_sprites()
+
 	if feedback_label:
 		feedback_label.text = ""
-	else:
-		print("Error: Feedback Label node not found. Check node path.")
 
 
-### Safe Area Logic ###
 func _on_safe_entered(body):
-	if body.name == "Player":  # Replace "Player" with your main character's node name
+	if body.name == "Player":
 		if not is_any_anomaly():
 			handle_correct_choice("Safe! Level Up!")
 		else:
 			reset_level("It's not safe! Resetting to Level 1.")
 
 func _on_safe_exited(body):
-	# Optional: Handle any actions when leaving the safe zone
 	if body.name == "Player":
 		pass
 
 
-### Anomaly Area Logic ###
 func _on_anomaly_entered(body):
 	if body.name == "Player":
 		if is_any_anomaly():
@@ -72,59 +64,49 @@ func _on_anomaly_entered(body):
 			reset_level("No anomaly here. Back to Level 1!")
 
 func _on_anomaly_exited(body):
-	# Optional: Handle any actions when leaving the anomaly zone
 	if body.name == "Player":
 		pass
 
 
-### Game Logic ###
 func handle_correct_choice(message: String):
-	level += 1  # Increment the level
+	level += 1
 	if feedback_label:
 		feedback_label.text = message
-	show_feedback_and_continue()  # Proceed to next level
-
+	show_feedback_and_continue()
 
 func reset_level(message: String):
 	level = 1
 	if feedback_label:
-		feedback_label.text = message  # Display the feedback
-
-	# Wait for feedback timeout, then clear feedback and reset sprites
+		feedback_label.text = message
 	await get_tree().create_timer(feedback_timeout).timeout
 	if feedback_label:
 		feedback_label.text = ""
-	randomize_sprites()  # Reset and randomize the Sprite3D nodes
-
+	randomize_sprites()
 
 func show_feedback_and_continue():
-	# Display feedback before proceeding to the next level
-	await get_tree().create_timer(feedback_timeout).timeout  # Wait
+	await get_tree().create_timer(feedback_timeout).timeout
 	if feedback_label:
-		feedback_label.text = ""  # Clear the feedback text
-	randomize_sprites()  # Move to the next level
-
+		feedback_label.text = ""
+	randomize_sprites()
 
 func is_any_anomaly() -> bool:
 	for sprite in is_anomaly_map.keys():
-		if is_anomaly_map[sprite]:  # True if an anomaly exists
+		if is_anomaly_map[sprite]:
 			return true
 	return false
 
-
 func randomize_sprites():
-	# Assign random textures to Sprite3D nodes and update anomaly state
 	is_anomaly_map.clear()
-
 	for sprite in sprite_3d_nodes:
 		if sprite and sprite is Sprite3D:
-			var is_anomaly = randf() < anomaly_probability  # Randomly determine if it's an anomaly
+			var is_anomaly = randf() < anomaly_probability
 			is_anomaly_map[sprite] = is_anomaly
-
-			# Set texture based on whether it's an anomaly
 			if is_anomaly and anomaly_sprites.size() > 0:
 				sprite.texture = anomaly_sprites[randi() % anomaly_sprites.size()]
 			elif normal_sprites.size() > 0:
 				sprite.texture = normal_sprites[randi() % normal_sprites.size()]
-		else:
-			print("Error: Invalid Sprite3D node.")
+
+			var mat = StandardMaterial3D.new()
+			mat.albedo_texture = sprite.texture
+			mat.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
+			sprite.material_override = mat

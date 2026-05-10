@@ -1,9 +1,10 @@
-[gd_scene load_steps=19 format=3 uid="uid://bntjaya4bqhpf"]
+[gd_scene format=3 uid="uid://bntjaya4bqhpf"]
 
 [ext_resource type="Script" uid="uid://ccywi0owb2jb5" path="res://scripts/terminal.gd" id="1_dhnb1"]
 [ext_resource type="PackedScene" uid="uid://cmil5roelihjq" path="res://scenes/plane.tscn" id="1_m430i"]
 [ext_resource type="Shader" uid="uid://wgpxd4uvm77g" path="res://shaders/vhs.gdshader" id="1_sy66w"]
 [ext_resource type="Script" uid="uid://b32tug1xe07uk" path="res://scripts/character_body_3d.gd" id="3_vs6ym"]
+[ext_resource type="Script" uid="uid://c02073to61oih" path="res://scripts/camera_3d.gd" id="5_2u1pf"]
 [ext_resource type="Texture2D" uid="uid://vrnv8gburbln" path="res://images/Untitled_Artwork (1).png" id="5_4vtf0"]
 [ext_resource type="FontFile" uid="uid://dy5xamotyheg2" path="res://fonts/GoogleSansCode-Regular.ttf" id="6_g6hjw"]
 
@@ -15,6 +16,10 @@ shader_parameter/chromatic_aberration = 0.008
 shader_parameter/blur_amount = 1.0
 shader_parameter/brightness = 1.2
 shader_parameter/saturation = 1.0
+shader_parameter/vignette_strength = 1.2
+shader_parameter/vignette_radius = 0.35
+shader_parameter/tint_color = Color(0.05, 0.08, 0.04, 1)
+shader_parameter/tint_strength = 0.35
 shader_parameter/color_offset_multiplier = 0.004
 shader_parameter/black_offset_multiplier = 0.1
 shader_parameter/color_offset = 0.005
@@ -55,130 +60,131 @@ size = Vector3(1, 6.7999268, 8.733154)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2u1pf"]
 albedo_color = Color(0.8053517, 0.46741134, 0.4016995, 1)
 
-[node name="Node3D" type="Control"]
+[node name="Node3D" type="Control" unique_id=1978220950]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_dhnb1")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1993278693]
 transform = Transform3D(-2.5263233, 0, -0.00079110265, 0, -2.454909, 0, 0.002072394, 0, -0.9643114, 0, 1.595166, 0)
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_vs6ym")
 
-[node name="plane" parent="." instance=ExtResource("1_m430i")]
+[node name="plane" parent="." unique_id=1727458541 instance=ExtResource("1_m430i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=361037088]
 transform = Transform3D(0.026560834, 0, 0.9996472, 0, 1, 0, -0.9996472, 0, 0.026560834, 25.000587, 2.032563, 0)
 script = ExtResource("3_vs6ym")
 
-[node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=249299652]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.708684, 0)
 current = true
+script = ExtResource("5_2u1pf")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=841706788]
 shape = SubResource("CapsuleShape3D_vs6ym")
 
-[node name="CSGBox3D" type="StaticBody3D" parent="."]
+[node name="CSGBox3D" type="StaticBody3D" parent="." unique_id=1622558993]
 physics_material_override = SubResource("PhysicsMaterial_vs6ym")
 
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="CSGBox3D"]
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="CSGBox3D" unique_id=1247525012]
 transform = Transform3D(1, 0, 0, 0, 0.0095294025, -0.9999546, 0, 0.9999546, 0.0095294025, 12.000345, -0.21826172, -5.9000797)
 shape = SubResource("BoxShape3D_dhnb1")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGBox3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGBox3D" unique_id=344295805]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.458031, -0.10913086, 1.049469)
 shape = SubResource("BoxShape3D_dhnb1")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="CSGBox3D"]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="CSGBox3D" unique_id=236600233]
 transform = Transform3D(1, 0, 0, 0, 0.0095294025, -0.9999546, 0, 0.9999546, 0.0095294025, 12.458031, -0.10913086, 3.1340322)
 shape = SubResource("BoxShape3D_dhnb1")
 
-[node name="CollisionShape3D4" type="CollisionShape3D" parent="CSGBox3D"]
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="CSGBox3D" unique_id=9839078]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.333645, 3.0020142, -0.5109863)
 shape = SubResource("BoxShape3D_vs6ym")
 
-[node name="CollisionShape3D5" type="CollisionShape3D" parent="CSGBox3D"]
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="CSGBox3D" unique_id=125150288]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.02195, 3.0020142, -0.5109863)
 shape = SubResource("BoxShape3D_vs6ym")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=911945939]
 transform = Transform3D(0.7110966, 0.53169423, 0.46004662, -0.44641602, 0.8469364, -0.28881052, -0.5431891, 0, 0.8396104, 0, 4.9970665, 0)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=12997549]
 environment = SubResource("Environment_4vtf0")
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="Node3D" type="Node3D" parent="." unique_id=1187104627]
 transform = Transform3D(-0.0025938058, 0, -0.029887658, 0, 0.03, 0, 0.029887658, 0, -0.0025938058, 3.6477356, 1.9754074, 1.1735923)
 
-[node name="Sprite3D" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D" type="Sprite3D" parent="Node3D" unique_id=1456899239]
 transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D2" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D2" type="Sprite3D" parent="Node3D" unique_id=756327002]
 transform = Transform3D(1, 0, 0, 0, 0.9999997, 0, 0, 0, 1, 33.76255, 0, -102.18295)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D3" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D3" type="Sprite3D" parent="Node3D" unique_id=89109980]
 transform = Transform3D(1, 0, 0, 0, 0.99999964, 0, 0, 0, 1, 26.195389, 0, -189.37715)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D4" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D4" type="Sprite3D" parent="Node3D" unique_id=1467825130]
 transform = Transform3D(1, 0, 0, 0, 0.9999994, 0, 0, 0, 1, -37.25349, 0, -398.57214)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D5" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D5" type="Sprite3D" parent="Node3D" unique_id=691438313]
 transform = Transform3D(1, 0, 0, 0, 0.9999994, 0, 0, 0, 1, -44.374638, 0, -480.627)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D6" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D6" type="Sprite3D" parent="Node3D" unique_id=719740415]
 transform = Transform3D(1, 0, 0, 0, 0.99999934, 0, 0, 0, 1, 4.018097, 0, -484.82678)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D7" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D7" type="Sprite3D" parent="Node3D" unique_id=505431470]
 transform = Transform3D(1, 0, 0, 0, 0.99999934, 0, 0, 0, 1, -52.20869, 0, -570.8964)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D8" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D8" type="Sprite3D" parent="Node3D" unique_id=1998846772]
 transform = Transform3D(1, 0, 0, 0, 0.9999993, 0, 0, 0, 1, -3.8159523, 0, -575.0962)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D9" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D9" type="Sprite3D" parent="Node3D" unique_id=548916295]
 transform = Transform3D(1, 0, 0, 0, 0.9999989, 0, 0, 0, 1, -212.50809, 0, -572.7862)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D10" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D10" type="Sprite3D" parent="Node3D" unique_id=653800603]
 transform = Transform3D(1, 0, 0, 0, 0.9999991, 0, 0, 0, 1, -237.99835, 0, -390.37543)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D11" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D11" type="Sprite3D" parent="Node3D" unique_id=1362789740]
 transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 1, -227.63208, 0, -270.9281)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D12" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D12" type="Sprite3D" parent="Node3D" unique_id=244623379]
 transform = Transform3D(1, 0, 0, 0, 0.9999989, 0, 0, 0, 1, -182.54208, 0, -274.84125)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D13" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D13" type="Sprite3D" parent="Node3D" unique_id=2048746205]
 transform = Transform3D(1, 0, 0, 0, 0.99999887, 0, 0, 0, 1, -212.38358, 0, -95.224365)
 texture = ExtResource("5_4vtf0")
 
-[node name="Sprite3D14" type="Sprite3D" parent="Node3D"]
+[node name="Sprite3D14" type="Sprite3D" parent="Node3D" unique_id=2024553785]
 transform = Transform3D(1, 0, 0, 0, 0.9999988, 0, 0, 0, 1, -167.29361, 0, -99.13751)
 texture = ExtResource("5_4vtf0")
 
-[node name="Safe" type="Area3D" parent="."]
+[node name="Safe" type="Area3D" parent="." unique_id=370146618]
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="Safe"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="Safe" unique_id=1023974765]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.0602655, 0.25524902, -0.93395996)
 size = Vector3(1, 1.510498, 9.316162)
 material = SubResource("StandardMaterial3D_ojupu")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Safe"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Safe" unique_id=537994861]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6059027, 2.8999634, -0.22546387)
 shape = SubResource("BoxShape3D_4vtf0")
 
-[node name="Label3D" type="Label3D" parent="Safe"]
+[node name="Label3D" type="Label3D" parent="Safe" unique_id=1025162750]
 transform = Transform3D(-0.09240535, 0, 0.99572146, 0, 1, 0, -0.99572146, 0, -0.09240535, -4.388459, 2.142898, -1.4267327)
 extra_cull_margin = 16384.0
 visibility_range_end_margin = 4096.0
@@ -187,18 +193,18 @@ text = "take off ?"
 font = ExtResource("6_g6hjw")
 font_size = 100
 
-[node name="Anomaly" type="Area3D" parent="."]
+[node name="Anomaly" type="Area3D" parent="." unique_id=1027978230]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Anomaly"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Anomaly" unique_id=618975044]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.577557, 2.8999634, -0.22546387)
 shape = SubResource("BoxShape3D_4vtf0")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Anomaly"]
+[node name="CSGBox3D" type="CSGBox3D" parent="Anomaly" unique_id=1374854665]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.732082, 0.12298584, -1.0598755)
 size = Vector3(1, 1.2459717, 9.161743)
 material = SubResource("StandardMaterial3D_2u1pf")
 
-[node name="Label3D" type="Label3D" parent="Anomaly"]
+[node name="Label3D" type="Label3D" parent="Anomaly" unique_id=229727208]
 transform = Transform3D(0.17656948, 0, -0.9842883, 0, 1, 0, 0.9842883, 0, 0.17656948, 29.120094, 2.142898, -1.4267327)
 extra_cull_margin = 16384.0
 visibility_range_end_margin = 4096.0

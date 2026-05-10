@@ -32,7 +32,7 @@ func _on_click_continue():
 		if current_line < story_text_lines.size():
 			show_next_line()
 		else:
-			get_tree().change_scene_to_file("res://Scenes/terminal.tscn")
+			get_tree().change_scene_to_file("res://scenes/terminal.tscn")
 
 func show_next_line():
 	label.text = ""
