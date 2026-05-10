@@ -1,0 +1,53 @@
+[gd_scene load_steps=4 format=3 uid="uid://b4f8m67d2ulyf"]
+
+[ext_resource type="Script" uid="uid://dnquyg1r7dm8e" path="res://scripts/story.gd" id="1_1octt"]
+[ext_resource type="Texture2D" uid="uid://bc0hlges4pr5b" path="res://images/Screenshot 2026-01-27 171523.png" id="2_wq8l7"]
+[ext_resource type="FontFile" uid="uid://dy5xamotyheg2" path="res://fonts/GoogleSansCode-Regular.ttf" id="3_md1pp"]
+
+[node name="Node2D" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_1octt")
+
+[node name="Screenshot20260127171523" type="Sprite2D" parent="."]
+position = Vector2(1325, 905)
+rotation = 0.10471976
+scale = Vector2(1.35, 1.35)
+texture = ExtResource("2_wq8l7")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+scale = Vector2(1.6356308, 1.7062498)
+color = Color(0, 0, 0, 0.76862746)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 630.0
+offset_top = 478.0
+offset_right = 2430.0
+offset_bottom = 883.0
+scale = Vector2(0.893415, 0.96166265)
+theme_override_colors/font_color = Color(0.86533034, 0.8202066, 0.9525512, 0.7372549)
+theme_override_fonts/font = ExtResource("3_md1pp")
+theme_override_font_sizes/font_size = 120
+text = "i would love to sleep right now"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1209.0
+offset_top = 1446.0
+offset_right = 1793.0
+offset_bottom = 1555.0
+scale = Vector2(0.94673336, 1.1308839)
+theme_override_colors/font_color = Color(0.4410263, 0.37935656, 0.686346, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
+theme_override_fonts/font = ExtResource("3_md1pp")
+theme_override_font_sizes/font_size = 80
+text = "> continue <"
+flat = true
