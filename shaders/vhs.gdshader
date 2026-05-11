@@ -9,17 +9,16 @@ void vertex() {
 uniform float color_levels : hint_range(2.0, 128.0) = 18.0;
 uniform float chromatic_aberration : hint_range(0.0, 0.2) = 0.012;
 uniform float blur_amount : hint_range(0.0, 5.0) = 1.4;
-uniform float brightness : hint_range(0.0, 3.0) = 1.05;       // was 0.6
-uniform float saturation : hint_range(0.0, 5.0) = 0.75;       // was 0.4
-uniform float vignette_strength : hint_range(0.0, 2.0) = 0.55; // was 0.8
+uniform float brightness : hint_range(0.0, 3.0) = 1.05;     
+uniform float saturation : hint_range(0.0, 5.0) = 0.75;      
+uniform float vignette_strength : hint_range(0.0, 2.0) = 0.55; 
 uniform float vignette_radius : hint_range(0.0, 1.0) = 15.0;
 uniform vec3 tint_color : source_color = vec3(0.05, 0.08, 0.04);
-uniform float tint_strength : hint_range(0.0, 1.0) = 0.07;    // was 0.1
+uniform float tint_strength : hint_range(0.0, 1.0) = 0.07;    
 uniform float color_offset_multiplier : hint_range(0.0, 0.2) = 0.006;
 uniform float black_offset_multiplier : hint_range(0.0, 0.5) = 0.15;
 uniform float color_offset : hint_range(-0.1, 0.1) = 0.005;
 
-// Lifted blacks — keeps shadows from going pure black
 uniform float shadow_lift : hint_range(0.0, 0.2) = 0.04;
 
 float noise(vec2 uv, float offset) {
@@ -62,7 +61,6 @@ void fragment() {
 	vec3 yuv_chroma = rgb_to_yuv(color_shifted.rgb);
 	col = yuv_to_rgb(vec3(yuv_base.x, yuv_chroma.yz));
 
-	// Lift blacks before processing so dark areas aren't crushed
 	col = col * (1.0 - shadow_lift) + shadow_lift;
 
 	float luma = dot(col, vec3(0.299, 0.587, 0.114));
@@ -72,10 +70,8 @@ void fragment() {
 	col.rgb = floor(col.rgb * color_levels + 0.3) / color_levels;
 	col = clamp(col, 0.0, 1.0);
 
-	// Reduced S-curve strength (was 0.8 — very aggressive)
 	col = mix(col, col * col * (3.0 - 2.0 * col), 0.35);
 
-	// Single vignette pass instead of two
 	vec2 vig_uv = uv - 0.5;
 	vig_uv.x *= VIEWPORT_SIZE.x / VIEWPORT_SIZE.y;
 	float vignette = smoothstep(vignette_radius, vignette_radius - vignette_strength * 0.5, length(vig_uv));

@@ -105,8 +105,6 @@ func randomize_sprites():
 				sprite.texture = anomaly_sprites[randi() % anomaly_sprites.size()]
 			elif normal_sprites.size() > 0:
 				sprite.texture = normal_sprites[randi() % normal_sprites.size()]
-
-			var mat = StandardMaterial3D.new()
-			mat.albedo_texture = sprite.texture
-			mat.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
-			sprite.material_override = mat
+			sprite.transparent = true
+			sprite.shaded = true 
+			sprite.pixel_size = 0.01
