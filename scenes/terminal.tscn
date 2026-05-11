@@ -23,6 +23,7 @@ shader_parameter/tint_strength = 0.35
 shader_parameter/color_offset_multiplier = 0.004
 shader_parameter/black_offset_multiplier = 0.1
 shader_parameter/color_offset = 0.005
+shader_parameter/shadow_lift = 0.04
 
 [sub_resource type="QuadMesh" id="QuadMesh_vs6ym"]
 lightmap_size_hint = Vector2i(12, 12)
