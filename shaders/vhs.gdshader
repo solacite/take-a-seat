@@ -11,11 +11,11 @@ uniform float blur_amount : hint_range(0.0, 5.0) = 1.4;
 uniform float brightness : hint_range(0.0, 3.0) = 0.6;
 uniform float saturation : hint_range(0.0, 5.0) = 0.4;
 
-uniform float vignette_strength : hint_range(0.0, 2.0) = 0.9;
-uniform float vignette_radius : hint_range(0.0, 1.0) = 0.55;
+uniform float vignette_strength : hint_range(0.0, 2.0) = 0.8;
+uniform float vignette_radius : hint_range(0.0, 1.0) = 15;
 
 uniform vec3 tint_color : source_color = vec3(0.05, 0.08, 0.04);
-uniform float tint_strength : hint_range(0.0, 1.0) = 0.35;
+uniform float tint_strength : hint_range(0.0, 1.0) = 0.1;
 
 uniform float color_offset_multiplier: hint_range(0.0, 0.2) = 0.006;
 uniform float black_offset_multiplier: hint_range(0.0, 0.5) = 0.15;
