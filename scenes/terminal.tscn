@@ -24,6 +24,10 @@ shader_parameter/color_offset_multiplier = 0.004
 shader_parameter/black_offset_multiplier = 0.1
 shader_parameter/color_offset = 0.005
 shader_parameter/shadow_lift = 0.04
+shader_parameter/warp_strength = 0.018
+shader_parameter/warp_speed = 1.2
+shader_parameter/scan_line_strength = 0.18
+shader_parameter/static_strength = 0.08
 
 [sub_resource type="QuadMesh" id="QuadMesh_vs6ym"]
 lightmap_size_hint = Vector2i(12, 12)
