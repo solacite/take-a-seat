@@ -1,5 +1,5 @@
 # take a seat!
-### it's really really really really borked*
+### it's really really really really borked**
 an anomaly game on a plane! made with Godot & Blender, and music in Musescore (idk where the music went). an old project that was rushed & thus scrapped and most of the time spent was for re-learning how to model in Blender. most progress i made back when i started out wasn't committed, which i got to doing more recently. should have committed more, oops! i plan to clean this up more in the future :)
 
 ### notes for reviewers: 🚨🚨🚨
