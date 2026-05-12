@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode unshaded, fog_disabled;
+render_mode fog_disabled;
 uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
 void vertex() {
 	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
@@ -8,11 +8,11 @@ uniform float color_levels : hint_range(2.0, 128.0) = 12.0;
 uniform float chromatic_aberration : hint_range(0.0, 0.2) = 0.012;
 uniform float blur_amount : hint_range(0.0, 5.0) = 1.4;
 uniform float brightness : hint_range(0.0, 3.0) = 1.25;
-uniform float saturation : hint_range(0.0, 5.0) = 0.75;
+uniform float saturation : hint_range(0.0, 5.0) = 1.1;
 uniform float vignette_strength : hint_range(0.0, 2.0) = 0.55;
 uniform float vignette_radius : hint_range(0.0, 1.0) = 15.0;
-uniform vec3 tint_color : source_color = vec3(0.05, 0.08, 0.04);
-uniform float tint_strength : hint_range(0.0, 1.0) = 0.07;
+uniform vec3 tint_color : source_color = vec3(0.15, 0.02, 0.02);
+uniform float tint_strength : hint_range(0.0, 3.0) = 1.2;
 uniform float color_offset_multiplier : hint_range(0.0, 0.2) = 0.006;
 uniform float black_offset_multiplier : hint_range(0.0, 0.5) = 0.15;
 uniform float color_offset : hint_range(-0.1, 0.1) = 0.005;
@@ -44,51 +44,40 @@ vec3 yuv_to_rgb(vec3 yuv) {
 
 void fragment() {
 	vec2 uv = FRAGCOORD.xy / VIEWPORT_SIZE;
-
-	// Warping
 	float warp_x = sin(uv.y * 8.0 + TIME * warp_speed) * warp_strength;
 	float warp_y = sin(uv.x * 6.0 + TIME * warp_speed * 0.7) * warp_strength * 0.5;
 	uv += vec2(warp_x, warp_y);
-
 	float line_logic = uv.y * 487.0;
 	vec2 noise_coord = vec2(floor(line_logic), fract(line_logic));
 	float x_offset = color_offset + noise(noise_coord, TIME) * color_offset_multiplier;
 	float black_offset = noise(noise_coord, TIME + 65.0) * (black_offset_multiplier * 0.01);
-
 	vec3 col;
 	col.r = texture(SCREEN_TEXTURE, uv + vec2(chromatic_aberration + black_offset, 0.0)).r;
 	col.g = texture(SCREEN_TEXTURE, uv + vec2(black_offset, 0.0)).g;
 	col.b = texture(SCREEN_TEXTURE, uv - vec2(chromatic_aberration - black_offset, 0.0)).b;
-
 	vec4 color_shifted = textureLod(SCREEN_TEXTURE, uv + vec2(x_offset, 0.0), blur_amount * 0.25);
-
 	vec3 yuv_base = rgb_to_yuv(col);
 	vec3 yuv_chroma = rgb_to_yuv(color_shifted.rgb);
 	col = yuv_to_rgb(vec3(yuv_base.x, yuv_chroma.yz));
-
-	// Grain + dither
 	float stat = noise(uv * 200.0, TIME * 8.0) * static_strength;
 	float grain = noise(uv * 600.0 + vec2(TIME * 3.0, TIME * 1.7), TIME * 12.0) * static_strength * 0.7;
 	float dither = noise(floor(FRAGCOORD.xy / 2.0), TIME * 5.0) * static_strength * 0.5;
 	col += stat + grain + dither;
-
-	// Scan lines
 	float scan = sin(FRAGCOORD.y * 3.14159) * 0.5 + 0.5;
 	col *= 1.0 - (scan_line_strength * (1.0 - scan));
-
 	col = col * (1.0 - shadow_lift) + shadow_lift;
 	float luma = dot(col, vec3(0.299, 0.587, 0.114));
 	col = mix(vec3(luma), col, saturation);
 	col *= brightness;
-	col = mix(col, col * tint_color * 6.0, tint_strength);
+	col.r = clamp(col.r * (1.0 + tint_strength * 0.3), 0.0, 1.0);
+col.g = clamp(col.g * (1.0 - tint_strength * 0.15), 0.0, 1.0);
+col.b = clamp(col.b * (1.0 - tint_strength * 0.15), 0.0, 1.0);
 	col.rgb = floor(col.rgb * color_levels + 0.3) / color_levels;
 	col = clamp(col, 0.0, 1.0);
 	col = mix(col, col * col * (3.0 - 2.0 * col), 0.35);
-
 	vec2 vig_uv = uv - 0.5;
 	vig_uv.x *= VIEWPORT_SIZE.x / VIEWPORT_SIZE.y;
 	float vignette = smoothstep(vignette_radius, vignette_radius - vignette_strength * 0.5, length(vig_uv));
 	col *= vignette;
-
 	ALBEDO = col;
 }

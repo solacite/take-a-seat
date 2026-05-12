@@ -1,27 +1,29 @@
 extends Control
 
 @onready var sprite_3d_nodes: Array = [
-	$SubViewport/Node3D/Sprite3D,
-	$SubViewport/Node3D/Sprite3D2,
-	$SubViewport/Node3D/Sprite3D3,
-	$SubViewport/Node3D/Sprite3D4,
-	$SubViewport/Node3D/Sprite3D5,
-	$SubViewport/Node3D/Sprite3D6,
-	$SubViewport/Node3D/Sprite3D7,
-	$SubViewport/Node3D/Sprite3D8,
-	$SubViewport/Node3D/Sprite3D9,
-	$SubViewport/Node3D/Sprite3D10,
-	$SubViewport/Node3D/Sprite3D11,
-	$SubViewport/Node3D/Sprite3D12,
-	$SubViewport/Node3D/Sprite3D13,
-	$SubViewport/Node3D/Sprite3D14
+	$Node3D/Sprite3D,
+	$Node3D/Sprite3D2,
+	$Node3D/Sprite3D3,
+	$Node3D/Sprite3D4,
+	$Node3D/Sprite3D5,
+	$Node3D/Sprite3D6,
+	$Node3D/Sprite3D7,
+	$Node3D/Sprite3D8,
+	$Node3D/Sprite3D9,
+	$Node3D/Sprite3D10,
+	$Node3D/Sprite3D11,
+	$Node3D/Sprite3D12,
+	$Node3D/Sprite3D13,
+	$Node3D/Sprite3D14
 ]
 
 @onready var feedback_label = $FeedbackLabel
 @onready var floor_label = $FloorLabel
+@onready var score_label = $ScoreLabel
 @onready var win_screen = $WinScreen
 @onready var safe_area = $Safe
 @onready var anomaly_area = $Anomaly
+@onready var player = $CharacterBody3D
 
 @export var normal_sprites: Array[Texture2D] = [load("res://images/Untitled_Artwork (1).png")]
 @export var anomaly_sprites: Array[Texture2D] = [load("res://images/Untitled_Artwork (2).png")]
@@ -31,40 +33,65 @@ extends Control
 
 var is_anomaly_map: Dictionary = {}
 var current_floor = 1
+var score = 0
 var is_processing = false
+var player_start_position: Vector3
 
 func _ready():
+	if player:
+		player_start_position = player.global_position
+	else:
+		push_error("player node not found")
 	if safe_area:
 		safe_area.connect("body_entered", Callable(self, "_on_safe_entered"))
+	else:
+		push_error("safe area not found")
 	if anomaly_area:
 		anomaly_area.connect("body_entered", Callable(self, "_on_anomaly_entered"))
+	else:
+		push_error("anomaly area not found")
 	if win_screen:
 		win_screen.hide()
 	randomize_sprites()
 	update_floor_label()
+	update_score_label()
 	if feedback_label:
 		feedback_label.text = ""
 
 func update_floor_label():
 	if floor_label:
-		floor_label.text = "Floor %d / %d" % [current_floor, total_floors]
+		floor_label.text = "flr %d / %d" % [current_floor, total_floors]
+
+func update_score_label():
+	if score_label:
+		score_label.text = "score: %d" % score
+
+func reset_player():
+	if player:
+		player.global_position = player_start_position
+	else:
+		push_error("cannot reset player - node is null")
 
 func _on_safe_entered(body):
-	if body.name == "Player" and not is_processing:
+	print("safe entered by: ", body.name)
+	if body.name == "CharacterBody3D" and not is_processing:
 		if not is_any_anomaly():
-			advance_floor("Floor clear!")
+			advance_floor("flr clear")
 		else:
-			fail_floor("There's an anomaly here...")
+			fail_floor("anomaly present")
 
 func _on_anomaly_entered(body):
-	if body.name == "Player" and not is_processing:
+	print("anomaly entered by: ", body.name)
+	if body.name == "CharacterBody3D" and not is_processing:
 		if is_any_anomaly():
-			advance_floor("Anomaly found!")
+			advance_floor("anomaly found")
 		else:
-			fail_floor("Nothing here. Stay alert.")
+			fail_floor("nothing here")
 
 func advance_floor(message: String):
 	is_processing = true
+	score += 1
+	update_score_label()
 	if feedback_label:
 		feedback_label.text = message
 	await get_tree().create_timer(feedback_timeout).timeout
@@ -75,6 +102,7 @@ func advance_floor(message: String):
 	update_floor_label()
 	if feedback_label:
 		feedback_label.text = ""
+	reset_player()
 	randomize_sprites()
 	is_processing = false
 
@@ -85,6 +113,7 @@ func fail_floor(message: String):
 	await get_tree().create_timer(feedback_timeout).timeout
 	if feedback_label:
 		feedback_label.text = ""
+	reset_player()
 	randomize_sprites()
 	is_processing = false
 
@@ -115,7 +144,7 @@ func randomize_sprites():
 			sprite.pixel_size = 0.01
 			var mat = StandardMaterial3D.new()
 			mat.albedo_texture = sprite.texture
-			mat.albedo_color = Color(0.45, 0.45, 0.45, 1.0)
+			mat.albedo_color = Color(0.08, 0.08, 0.08, 1.0)
 			mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 			mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 			sprite.material_override = mat
